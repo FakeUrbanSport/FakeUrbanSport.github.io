@@ -20,16 +20,18 @@ body {
 }
 
 .checkin-card {
-  position: relative;
+  position: absolute;
   background: #018462;
-  margin: 250px auto;
   padding: 20px;
   border-radius: 5px;
   text-align: center;
   color: white;
-  width: 60%;
-  padding-top: 150px;
+  width: 75%;
+  padding-top: 100px;
   z-index: 100;
+  left: 50%;
+  transform: TranslateX(-50%);
+  top: 20%;
 }
 
 .close-btn {
@@ -50,8 +52,8 @@ body {
 
 .image-circle {
   position: absolute;
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   /* background: #fff; */
   top: -100px;
@@ -64,8 +66,8 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 250px; /* diameter of dashed ring  */
-  height: 250px;
+  width: 200px; /* diameter of dashed ring  */
+  height: 200px;
   transform: translate(-50%, -50%);
   fill: none;
   pointer-events: none; /* let clicks through        */
@@ -73,8 +75,8 @@ body {
 
 /* make the dotted ring ride a little further out */
 .ring--dots {
-  width: 248px;
-  height: 248px;
+  width: 198px;
+  height: 198px;
   animation: spin 15s linear infinite;
 }
 
@@ -115,8 +117,8 @@ body {
   position: absolute;
   bottom: 8px;
   right: 10px;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 }
 
 .check-icon img {
@@ -127,7 +129,7 @@ body {
   width: 75%;
   min-height: 100px;
   position: absolute;
-  top: 70%;
+  top: 80%;
   background-color: #171a21;
   border-radius: 5px;
   transform: translateX(-50%);
@@ -244,12 +246,17 @@ h1 {
 }
 
 .bottom-nav {
+  position: fixed;
   background: #171a21;
   padding: 10px 0;
   padding-bottom: 15px;
-  display: flex;
+  display: flex
+;
   justify-content: space-around;
   color: #65686d;
+  width: 100%;
+  bottom: 0;
+  z-index: 1000;
 }
 
 .nav-item {
