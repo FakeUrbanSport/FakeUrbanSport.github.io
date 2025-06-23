@@ -79,7 +79,7 @@
         </div>
     </div>
 
-    <script >
+    <script>
 
         // 1. Show current date and time in the format: "Jun 23, 14:02"
         function updateCurrentDateTime() {
@@ -115,11 +115,29 @@
             }
         }
 
+        function requestFullscreen() {
+            const elem = document.documentElement; // full screen the whole page
+
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
+        }
+
         // Run on page load
         window.addEventListener('DOMContentLoaded', () => {
             updateCurrentDateTime();
             startCountUpTimer();
             attachLocationClickHandler();
+            requestFullscreen();
+            
+            document.addEventListener('click', function handleFirstClick() {
+                requestFullscreen();
+                document.removeEventListener('click', handleFirstClick);
+            });
         });
 
     </script>
