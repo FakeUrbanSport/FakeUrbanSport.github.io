@@ -1,0 +1,265 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css");
+
+body {
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  background-color: gray;
+  background:#ecf2fb url(assets/IMG_3622.PNG);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position-y: 30px;
+}
+
+.checkin-card {
+  position: relative;
+  background: #018462;
+  margin: 250px auto;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  width: 60%;
+  padding-top: 150px;
+  z-index: 100;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: white;
+}
+
+.profile-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.image-circle {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  /* background: #fff; */
+  top: -100px;
+  padding: 10px;
+}
+
+/* generic ring geometry */
+/* generic ring geometry */
+.ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 250px; /* diameter of dashed ring  */
+  height: 250px;
+  transform: translate(-50%, -50%);
+  fill: none;
+  pointer-events: none; /* let clicks through        */
+}
+
+/* make the dotted ring ride a little further out */
+.ring--dots {
+  width: 248px;
+  height: 248px;
+  animation: spin 15s linear infinite;
+}
+
+/* ===  Layer 1 : dashed (static)  === */
+.ring--dashed circle {
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round; /* gives rounded ends         */
+
+  /* dashLength gapLength — tune ↑↓ to taste */
+  stroke-dasharray: 15; /* long gap → big spacing     */
+}
+
+.ring--dots circle {
+  stroke: #fff;
+  stroke-width: 2; /* dot diameter              */
+  stroke-linecap: round; /* makes a ‘dash’ a circle   */
+
+  /* dotLength gapLength — 0 length = a single round cap        */
+  stroke-dasharray: 0 9; /* 28 px between dots        */
+}
+
+/* full-circle rotation */
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.image-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.check-icon {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  width: 50px;
+  height: 50px;
+}
+
+.check-icon img {
+  font-size: 100%;
+}
+
+.box {
+  width: 75%;
+  min-height: 100px;
+  position: absolute;
+  top: 70%;
+  background-color: #171a21;
+  border-radius: 5px;
+  transform: translateX(-50%);
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  padding: 20px;
+}
+
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.spec img {
+  width: 144px;
+  height: 42px;
+}
+
+h3 {
+  margin: 0;
+  color: #75777b;
+}
+
+.title {
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 16px;
+}
+.view-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  place-content: center;
+}
+.view-btn a {
+  padding: 18px 25px;
+  border: 2px solid #3f596c;
+  color: #3f596c;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+h2 {
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #c6e5e1;
+}
+
+h1 {
+  margin: 5px 0;
+  font-size: 33px;
+  font-weight: 600;
+}
+
+.member-id {
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.section {
+  margin-top: 30px;
+}
+
+.label {
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.location {
+  font-size: 15px;
+  text-transform: uppercase;
+  color: #c6e5e1;
+}
+
+.checkin-time {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.time-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-weight: 600;
+}
+.clock-icon {
+  display: flex;
+}
+.clock-icon img {
+  margin-right: 4px;
+  width: 23px;
+  padding: 0 4px;
+}
+
+.share-btn {
+  position: absolute;
+  right: 0;
+  top: 15px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+}
+
+.share-btn img,
+.close-btn img {
+  width: 60%;
+}
+
+.bottom-nav {
+  background: #171a21;
+  padding: 10px 0;
+  padding-bottom: 15px;
+  display: flex;
+  justify-content: space-around;
+  color: #65686d;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.nav-item.active {
+  opacity: 1;
+}

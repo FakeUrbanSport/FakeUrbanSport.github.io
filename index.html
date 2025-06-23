@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Check-in Success</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="checkin-card">
+            <button class="close-btn">
+                <img src="assets/close.png" alt="">
+            </button>
+
+            <div class="profile-wrapper">
+                <div class="image-circle">
+
+                    <img src="assets/1639592262853.jfif" alt="Profile Photo" />
+
+                    <svg class="ring ring--dashed" viewBox="0 0 110 110">
+                        <circle cx="55" cy="55" r="52" />
+                    </svg>
+
+                    <!-- animated dotted ring -->
+                    <svg class="ring ring--dots" viewBox="0 0 125 125">
+                        <circle cx="62.5" cy="62.5" r="59.5" />
+                    </svg>
+
+
+                    <div class="check-icon">
+                        <img src="assets/checked.png" alt="">
+                    </div>
+                </div>
+            </div>
+
+            <h2>Check-in successful</h2>
+            <h1>Behzad Chizari</h1>
+            <p class="member-id">873334992</p>
+
+            <div class="section">
+                <span class="label">Fitness</span>
+                <p class="location">Holmes Place am Seestern</p>
+            </div>
+
+            <div class="section checkin-time">
+                <span>Checked-in at</span>
+                <div class="time-row">
+                    <span>Jun 5, 21:02</span>
+                    <span class="clock-icon"><img class="clock-icon" src="assets/clock.png" alt=""> <span></span></span>
+                </div>
+            </div>
+
+            <button class="share-btn">
+                <img src="assets/share.png" alt="">
+            </button>
+        </div>
+
+        <div class="box">
+            <div class="spec">
+                <h3>Fitness</h2>
+                    <h3 class="title">Holmes Place am Seestern</h2>
+                        <img src="assets/checkin.png" alt="">
+            </div>
+            <div class="view-btn">
+                <a href=""> View</a>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item"><i class="fas fa-map-marker-alt"></i> Venues</div>
+            <div class="nav-item"><i class="fas fa-dumbbell"></i> Classes</div>
+            <div class="nav-item active"><i class="fas fa-qrcode"></i> Check-in</div>
+            <div class="nav-item"><i class="fas fa-user"></i> Profile</div>
+        </div>
+    </div>
+
+    <script >
+
+        // 1. Show current date and time in the format: "Jun 23, 14:02"
+        function updateCurrentDateTime() {
+            const now = new Date();
+            const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            const formattedDate = now.toLocaleString('en-US', options).replace(',', '');
+            document.querySelector('.time-row span:first-child').textContent = formattedDate;
+        }
+
+        // 2. Start count-up timer in seconds
+        function startCountUpTimer() {
+            const counterSpan = document.querySelector('.clock-icon span');
+            let seconds = 0;
+            setInterval(() => {
+                seconds++;
+                counterSpan.textContent = seconds;
+            }, 1000);
+        }
+
+        // 3. Prompt to update location name
+        function attachLocationClickHandler() {
+            const locationElements = document.querySelectorAll('.location, .title');
+            const triggerElement = document.querySelector('.location');
+
+            if (triggerElement) {
+                triggerElement.style.cursor = 'pointer';
+                triggerElement.addEventListener('click', () => {
+                    const newLocation = prompt("Enter new location name:");
+                    if (newLocation) {
+                        locationElements.forEach(el => el.textContent = newLocation);
+                    }
+                });
+            }
+        }
+
+        // Run on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCurrentDateTime();
+            startCountUpTimer();
+            attachLocationClickHandler();
+        });
+
+    </script>
+</body>
+
+</html>
