@@ -16,7 +16,7 @@ body {
   background:#ecf2fb url(assets/IMG_3622.PNG);
   background-size: contain;
   background-repeat: no-repeat;
-  background-position-y: 30px;
+  /* background-position-y: 30px; */
 }
 
 .checkin-card {
@@ -31,7 +31,7 @@ body {
   z-index: 100;
   left: 50%;
   transform: TranslateX(-50%);
-  top: 20%;
+  top: 25%;
 }
 
 .close-btn {
@@ -66,8 +66,8 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 200px; /* diameter of dashed ring  */
-  height: 200px;
+  width: 180px; /* diameter of dashed ring  */
+  height: 180px;
   transform: translate(-50%, -50%);
   fill: none;
   pointer-events: none; /* let clicks through        */
@@ -75,8 +75,8 @@ body {
 
 /* make the dotted ring ride a little further out */
 .ring--dots {
-  width: 198px;
-  height: 198px;
+  width: 178px;
+  height: 178px;
   animation: spin 15s linear infinite;
 }
 
@@ -126,11 +126,11 @@ body {
 }
 
 .box {
-  width: 75%;
+  width: 85%;
   min-height: 100px;
   position: absolute;
-  top: 80%;
-  background-color: #171a21;
+  top: 70%;
+  background-color: rgba(23, 26, 33);
   border-radius: 5px;
   transform: translateX(-50%);
   left: 50%;
@@ -159,7 +159,7 @@ h3 {
 .title {
   text-transform: uppercase;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
 }
 .view-btn {
   display: flex;
@@ -174,7 +174,7 @@ h3 {
   text-decoration: none;
   border-radius: 10px;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 15px;
 }
 
 h2 {
