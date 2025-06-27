@@ -31,7 +31,7 @@ body {
   z-index: 100;
   left: 50%;
   transform: TranslateX(-50%);
-  top: 25%;
+  top: 20%;
 }
 
 .close-btn {
