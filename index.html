@@ -39,7 +39,7 @@
             </div>
 
             <h2>Check-in successful</h2>
-            <h1>Behzad Chizari</h1>
+            <h1 class="name">Behzad Chizari</h1>
             <p class="member-id">873334992</p>
 
             <div class="section">
@@ -81,15 +81,21 @@
 
     <script>
 
-        // 1. Show current date and time in the format: "Jun 23, 14:02"
+        // Format date in "Jun 27 21:05" (24-hour)
         function updateCurrentDateTime() {
             const now = new Date();
-            const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-            const formattedDate = now.toLocaleString('en-US', options).replace(',', '');
-            document.querySelector('.time-row span:first-child').textContent = formattedDate;
+            const options = {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            };
+            const formatted = now.toLocaleString('en-US', options).replace(',', '');
+            document.querySelector('.time-row span:first-child').textContent = formatted;
         }
 
-        // 2. Start count-up timer in seconds
+        // Start count-up timer from 0 seconds
         function startCountUpTimer() {
             const counterSpan = document.querySelector('.clock-icon span');
             let seconds = 0;
@@ -99,47 +105,78 @@
             }, 1000);
         }
 
-        // 3. Prompt to update location name
-        function attachLocationClickHandler() {
-            const locationElements = document.querySelectorAll('.location, .title');
-            const triggerElement = document.querySelector('.location');
+        // Allow user to change name via <h1> click
+        function enableNameEditing() {
+            const nameElement = document.querySelector('h1.name');
 
-            if (triggerElement) {
-                triggerElement.style.cursor = 'pointer';
-                triggerElement.addEventListener('click', () => {
-                    const newLocation = prompt("Enter new location name:");
-                    if (newLocation) {
-                        locationElements.forEach(el => el.textContent = newLocation);
+            if (nameElement) {
+                nameElement.style.cursor = 'pointer';
+                nameElement.addEventListener('click', () => {
+                    const newName = prompt('Enter your name:');
+                    if (newName) {
+                        nameElement.textContent = newName;
                     }
                 });
             }
         }
 
-        function requestFullscreen() {
-            const elem = document.documentElement; // full screen the whole page
+        // Allow user to select an image file and preview it
+        function enableProfileImageUpload() {
+            const profileImage = document.querySelector('.image-circle img');
+            if (!profileImage) return;
 
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { /* Safari */
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { /* IE11 */
-                elem.msRequestFullscreen();
-            }
+            profileImage.style.cursor = 'pointer';
+
+            // Create hidden file input
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.style.display = 'none';
+            document.body.appendChild(fileInput);
+
+            profileImage.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        profileImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
         }
 
-        // Run on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            updateCurrentDateTime();
-            startCountUpTimer();
-            attachLocationClickHandler();
-            requestFullscreen();
-            
+        // Fullscreen request (runs only once after first user interaction)
+        function setupFullscreenTrigger() {
+            function requestFullscreen() {
+                const elem = document.documentElement;
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+            }
+
             document.addEventListener('click', function handleFirstClick() {
                 requestFullscreen();
                 document.removeEventListener('click', handleFirstClick);
             });
-        });
+        }
 
+        // Initialize all functions on DOM load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCurrentDateTime();
+            startCountUpTimer();
+            enableNameEditing();
+            enableProfileImageUpload();
+            setupFullscreenTrigger();
+        });
     </script>
 </body>
 
