@@ -169,11 +169,27 @@
             });
         }
 
+        function enableLocationEditing() {
+            const locationElements = document.querySelectorAll('.location, .title');
+            const triggerElement = document.querySelector('.location');
+
+            if (triggerElement) {
+                triggerElement.style.cursor = 'pointer';
+                triggerElement.addEventListener('click', () => {
+                    const newLocation = prompt("Enter new location name:");
+                    if (newLocation) {
+                        locationElements.forEach(el => el.textContent = newLocation);
+                    }
+                });
+            }
+        }
+
         // Initialize all functions on DOM load
         window.addEventListener('DOMContentLoaded', () => {
             updateCurrentDateTime();
             startCountUpTimer();
             enableNameEditing();
+            enableLocationEditing();
             enableProfileImageUpload();
             setupFullscreenTrigger();
         });
