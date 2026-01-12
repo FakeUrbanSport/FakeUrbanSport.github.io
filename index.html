@@ -49,7 +49,7 @@
             </div>
 
             <div class="header">
-                <h1 class="title"> <span class="titleVal">Behzad Chizari</span> • 873334992</h1>
+                <h1 class="title"><span class="titleVal">Behzad Chizari</span> • 873334992</h1>
                 <p class="subtitle">Check-in: Dec 20, 13:14 · 00:00:18</p>
             </div>
 
@@ -100,14 +100,21 @@
 
     </div>
 
-    <!-- ✅ Added scripts: persistence for edits via localStorage -->
+    <!-- ✅ Scripts: persistence for edits; timer not stored; reset via Close button -->
     <script>
         // ---------- Storage keys ----------
         const STORAGE_KEYS = {
             title: 'checkin_title',
             venue: 'checkin_venue',
-            photo: 'checkin_photo_dataurl',
-            startTs: 'checkin_start_ts'
+            photo: 'checkin_photo_dataurl'
+            // NOTE: No startTs key -> we do not store the counter/timer in storage
+        };
+
+        // ---------- Baseline (original) values captured at load ----------
+        const BASELINE = {
+            titleText: null,
+            venueText: null,
+            photoSrc: null
         };
 
         // ---------- Helpers ----------
@@ -131,32 +138,36 @@
             return `${h}:${m}:${s}`;
         }
 
-        // ---------- Date & Timer with persistence ----------
+        // ---------- Date & Timer (NOT persisted) ----------
         let timerId = null;
-        let pinnedDateText = '';
-        let startTs = null; // epoch ms
 
-        function initCheckinTime() {
+        function initCheckinTimeNoPersistence() {
             const subtitleEl = document.querySelector('.subtitle');
             if (!subtitleEl) return;
 
-            // Restore or set the start timestamp
-            const savedTs = localStorage.getItem(STORAGE_KEYS.startTs);
-            if (savedTs) {
-                startTs = parseInt(savedTs, 10);
-            } else {
-                startTs = Date.now();
-                localStorage.setItem(STORAGE_KEYS.startTs, String(startTs));
-            }
+            // Pin to current date-time on each load
+            const pinnedDateText = formatDateLikeExample(new Date());
 
-            // Pin the date to the saved start time (stable across refresh)
-            pinnedDateText = formatDateLikeExample(new Date(startTs));
-
-            // Compute current elapsed based on now - startTs
-            let elapsedSeconds = Math.max(0, Math.floor((Date.now() - startTs) / 1000));
+            // Start from zero on load
+            let elapsedSeconds = 0;
             subtitleEl.textContent = `Check-in: ${pinnedDateText} · ${formatHMS(elapsedSeconds)}`;
 
-            // Start/refresh the interval
+            // Clear any old interval and start new one
+            if (timerId) clearInterval(timerId);
+            timerId = setInterval(() => {
+                elapsedSeconds++;
+                subtitleEl.textContent = `Check-in: ${pinnedDateText} · ${formatHMS(elapsedSeconds)}`;
+            }, 1000);
+        }
+
+        function resetCheckinTimeToNowNoPersistence() {
+            const subtitleEl = document.querySelector('.subtitle');
+            if (!subtitleEl) return;
+
+            const pinnedDateText = formatDateLikeExample(new Date());
+            let elapsedSeconds = 0;
+            subtitleEl.textContent = `Check-in: ${pinnedDateText} · ${formatHMS(elapsedSeconds)}`;
+
             if (timerId) clearInterval(timerId);
             timerId = setInterval(() => {
                 elapsedSeconds++;
@@ -166,31 +177,50 @@
 
         // ---------- Title editing (click to change) with persistence ----------
         function enableTitleEditing() {
-            const titleEl = document.querySelector('span.titleVal');
-            if (!titleEl) return;
+            const titleSpan = document.querySelector('span.titleVal');
+            if (!titleSpan) return;
 
-            // Restore saved title
+            // Capture baseline once
+            if (BASELINE.titleText === null) {
+                BASELINE.titleText = titleSpan.textContent;
+            }
+
+            // Restore saved title (span only)
             const savedTitle = localStorage.getItem(STORAGE_KEYS.title);
-            if (savedTitle) titleEl.textContent = savedTitle;
+            if (savedTitle) titleSpan.textContent = savedTitle;
 
-            titleEl.style.cursor = 'pointer';
-            titleEl.title = 'Click to edit title';
+            titleSpan.style.cursor = 'pointer';
+            titleSpan.title = 'Click to edit title';
 
-            titleEl.addEventListener('click', () => {
-                const current = titleEl.textContent.trim();
-                const next = prompt('Enter new title (e.g., Name • MemberID):', current);
+            titleSpan.addEventListener('click', () => {
+                const current = titleSpan.textContent.trim();
+                const next = prompt('Enter new title (name):', current);
                 if (next && next.trim()) {
                     const clean = next.trim();
-                    titleEl.textContent = clean;
+                    titleSpan.textContent = clean;
                     localStorage.setItem(STORAGE_KEYS.title, clean);
+                    document.title = `Check-in • ${clean}`;
                 }
             });
+        }
+
+        function restoreTitleToBaseline() {
+            const titleSpan = document.querySelector('span.titleVal');
+            if (!titleSpan) return;
+            titleSpan.textContent = BASELINE.titleText ?? titleSpan.textContent;
+            document.title = 'Check-in Page Mock';
+            localStorage.removeItem(STORAGE_KEYS.title);
         }
 
         // ---------- Profile image upload (click the image) with persistence ----------
         function enableProfileImageUpload() {
             const profileImg = document.querySelector('.image-circle img');
             if (!profileImg) return;
+
+            // Capture baseline once
+            if (BASELINE.photoSrc === null) {
+                BASELINE.photoSrc = profileImg.getAttribute('src');
+            }
 
             // Restore saved photo
             const savedPhoto = localStorage.getItem(STORAGE_KEYS.photo);
@@ -227,21 +257,35 @@
             });
         }
 
-        // ---------- Venue editing (click the venue value) with persistence ----------
-        function enableVenueEditing() {
-            // Find the "Venue" row's value element
-            const rows = document.querySelectorAll('.rows .row');
-            let venueValueEl = null;
+        function restorePhotoToBaseline() {
+            const profileImg = document.querySelector('.image-circle img');
+            if (!profileImg) return;
+            const fallback = BASELINE.photoSrc || profileImg.getAttribute('src');
+            profileImg.src = fallback;
+            localStorage.removeItem(STORAGE_KEYS.photo);
+        }
 
-            rows.forEach(row => {
+        // ---------- Venue editing (click the venue value) with persistence ----------
+        function findVenueValueElement() {
+            const rows = document.querySelectorAll('.rows .row');
+            for (const row of rows) {
                 const labelEl = row.querySelector('.label');
                 const valueEl = row.querySelector('.value');
                 if (labelEl && valueEl && labelEl.textContent.trim().toLowerCase() === 'venue') {
-                    venueValueEl = valueEl;
+                    return valueEl;
                 }
-            });
+            }
+            return null;
+        }
 
+        function enableVenueEditing() {
+            const venueValueEl = findVenueValueElement();
             if (!venueValueEl) return;
+
+            // Capture baseline once
+            if (BASELINE.venueText === null) {
+                BASELINE.venueText = venueValueEl.textContent;
+            }
 
             // Restore saved venue
             const savedVenue = localStorage.getItem(STORAGE_KEYS.venue);
@@ -261,12 +305,49 @@
             });
         }
 
+        function restoreVenueToBaseline() {
+            const venueValueEl = findVenueValueElement();
+            if (!venueValueEl) return;
+            venueValueEl.textContent = BASELINE.venueText || venueValueEl.textContent;
+            localStorage.removeItem(STORAGE_KEYS.venue);
+        }
+
+        // ---------- Reset everything when Close button is clicked ----------
+        function setupCloseButtonReset() {
+            const closeBtn = document.querySelector('.top-actions .round-btn[aria-label="Close"]');
+            if (!closeBtn) return;
+
+            closeBtn.style.cursor = 'pointer';
+            closeBtn.title = 'Reset changes';
+
+            closeBtn.addEventListener('click', () => {
+                // Clear persisted values for editable elements (NOT timer)
+                localStorage.removeItem(STORAGE_KEYS.title);
+                localStorage.removeItem(STORAGE_KEYS.venue);
+                localStorage.removeItem(STORAGE_KEYS.photo);
+
+                // Restore UI to original baseline values
+                restoreTitleToBaseline();
+                restoreVenueToBaseline();
+                restorePhotoToBaseline();
+
+                // Reset check-in time to now and restart timer (no persistence)
+                resetCheckinTimeToNowNoPersistence();
+            });
+        }
+
         // ---------- Initialize on DOM ready ----------
         window.addEventListener('DOMContentLoaded', () => {
-            initCheckinTime();       // Persisted start time + live timer
-            enableTitleEditing();    // Title edit persistence
-            enableVenueEditing();    // Venue edit persistence
-            enableProfileImageUpload(); // Photo change persistence
+            // Capture baselines before any restoration
+            enableTitleEditing();
+            enableVenueEditing();
+            enableProfileImageUpload();
+
+            // Init time & timer (not persisted)
+            initCheckinTimeNoPersistence();
+
+            // Close button triggers full reset
+            setupCloseButtonReset();
         });
     </script>
 </body>
